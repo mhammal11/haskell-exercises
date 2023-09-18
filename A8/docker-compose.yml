@@ -1,0 +1,16 @@
+version: '3.3'
+services:
+  service:
+    build: .
+    # platform: linux/amd64
+    image: 3fp3_docker_image
+    volumes:
+      - ./src:/home/src
+    container_name: 3fp3_container
+    command: bash -c "
+      ghc A8.hs
+      && ghc Main.hs
+      && ./Main
+      && rm *.o ; rm *.hi ; rm *.dyn_hi ; rm *.dyn_o  ; rm Main
+      && echo
+      "

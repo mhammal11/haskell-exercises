@@ -1,0 +1,28 @@
+# Dockerfile for a haskell environment
+
+FROM ubuntu:20.04
+LABEL MAINTAINER="3FP3 Instruction Team"
+
+## ensure locale is set during build
+ENV LANG C.UTF-8
+
+## for apt to be noninteractive
+ENV DEBIAN_FRONTEND noninteractive
+ENV DEBCONF_NONINTERACTIVE_SEEN true
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gnupg ca-certificates dirmngr curl git software-properties-common && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends ghc ghc-prof ghc-doc  cabal-install \
+        libtinfo-dev && \
+    rm -rf "$GNUPGHOME" /var/lib/apt/lists/* /stack.tar.gz
+
+WORKDIR "/home/src"
+
+RUN cabal update
+RUN cabal install  hspec hspec-contrib QuickCheck HUnit
+RUN cabal install mtl
+RUN cabal install MonadRandom
+RUN cabal install random
+RUN cabal install random-shuffle
+
